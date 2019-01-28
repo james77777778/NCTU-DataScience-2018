@@ -5,11 +5,8 @@ Created on Thu Oct 11 15:03:07 2018
 @author: JamesChiou
 """
 import sys
-# ./testdata/sample2_0.1.out out2
-# comparison_file = sys.argv[1]
-# test_file = sys.argv[2]
-comparison_file = './testdata/sample2_0.1.out'
-test_file = 'out2'
+comparison_file = sys.argv[1]
+test_file = sys.argv[2]
 
 check = True
 with open(comparison_file, newline='') as file:

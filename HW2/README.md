@@ -4,7 +4,7 @@
 - Python 3.6
 
 ## Usage:
-- 找出機率>min_support的Frequent Patterns
+1. 找出機率>min_support的Frequent Patterns
     ```bash
     $ python main.py [min_support] [inputFile(測資)] [outputFile]
     ```
@@ -28,3 +28,7 @@
         10:0.4386
         ...
         ```
+2. 測試兩個檔案字串是否相等 (不管Windows或Linux文檔皆可)
+    ```bash
+    $ python test.py [comparison_file] [test_file]
+    ```

@@ -1,4 +1,4 @@
-# Homework 2 - Income Prediction
+# Homework 3 - Income Prediction
 
 ## Packages:
 - xgboost

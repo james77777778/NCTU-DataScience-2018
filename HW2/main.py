@@ -56,8 +56,6 @@ class ECLAT:
             if key_count >= min_count:
 
                 # Recursive do ECLAT (BFS)
-                # self.eclat(prefix+[key], start+1, suffix, min_count, trans,
-                # save_dict)
                 # Store other items
                 suffix = {}
                 for other_key, other_item in item_dict.items():
@@ -110,10 +108,6 @@ class ECLAT:
 
     # Main program
     def executeECLAT(self, min_support=0.1, inputFile="", outputFile=""):
-        # Start measure run time
-        '''
-        tStart = time.process_time()
-        '''
         # Read data from inputFile
         item_dict = {}
         trans = 0
@@ -126,11 +120,8 @@ class ECLAT:
                     if item not in item_dict:
                         item_dict[item] = set()
                     item_dict[item].add(trans)
-        '''
-        print("Vertical data format builded")
-        '''
+        # Vertical data format builded
         min_count = min_support*trans
-
         for key, value in item_dict.copy().items():
             if len(value) < min_count:
                 item_dict.pop(key)
@@ -138,23 +129,16 @@ class ECLAT:
         save_dict = {}
         prefix = []
         start = 0
-
         # Do ECLAT
         self.eclat(prefix, start, item_dict, min_count, trans, save_dict)
-
         # Count all frequent items ( counts > min_support*transaction )
         count = 0
         for key, dict_value in save_dict.items():
             count += len(dict_value)
-        '''
-        print("Frequent item number: "+str(count))
-        print("ECLAT Done")
-        '''
         # Order the save_dict to oreder_list and save to the file
         order_list = []
         m = Manager()
         order_list = m.list(order_list)
-
         # Multiprocessed sort & Write file
         pathlib.Path('temp').mkdir(parents=True, exist_ok=True)
         with Pool(cpu_count()-1) as p:
@@ -164,21 +148,11 @@ class ECLAT:
                               order_list, i))
             p.close()
             p.join()
-
         # Concaenate files to outputFile
         with open(outputFile, 'wb') as wfd:
             for f in [str(i) for i in range(0, len(save_dict))]:
                 with open("temp/"+f, 'rb') as fd:
                     copyfileobj(fd, wfd, 1024*1024*10)
-        '''
-        print("Finished")
-        '''
-
-        # End measure run time
-        '''
-        tEnd = time.process_time()
-        print("Run time: "+ str(tEnd-tStart)+" sec")
-        '''
 
 
 if __name__ == '__main__':

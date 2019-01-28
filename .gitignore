@@ -1,0 +1,14 @@
+# vscode
+.vscode
+
+# zip
+*.zip
+
+# temp
+temp
+
+# pytorch
+__pycache__
+
+# data
+data

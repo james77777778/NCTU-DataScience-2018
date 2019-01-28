@@ -12,3 +12,7 @@ __pycache__
 
 # data
 data
+*.csv
+
+# catboost
+catboost_info

@@ -28,8 +28,8 @@
         ```bash
         all like: 推文數量
         all boo: 噓文數量
-        like \#rank: userid 推文數
-        boo \#rank: userid 噓文數
+        like #rank: userid 推文數
+        boo #rank: userid 噓文數
         ```
 3. 找爆文和圖片URL
     ```bash

@@ -10,7 +10,12 @@
     ```
     - Input Data Format:
         - all edges between 2 vertices
-        - eg. 0 1
+        ```bash
+        0 1
+        0 2
+        0 3
+        ...
+        ```
     - Output File Format:
         - largest core's vertices 
         ```bash

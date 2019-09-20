@@ -46,8 +46,13 @@ class PTTCrawler:
                        "https://www.ptt.cc/bbs/Beauty/M.1507620395.A.27E.html",
                        "https://www.ptt.cc/bbs/Beauty/M.1510829546.A.D83.html",
                        "https://www.ptt.cc/bbs/Beauty/M.1512141143.A.D31.html"]
+        # use session to pass [ask over 18]
+        s = requests.session()
+        s.post(
+            'https://www.ptt.cc/ask/over18',
+            data={'from': '/bbs/Beauty/index.html', 'yes': 'yes'})
 
-        request = requests.get(PTT_URL_index)
+        request = s.get(PTT_URL_index)
         content = request.text
         soup = BeautifulSoup(content, "html.parser")
         divs = soup.find_all("div", "r-ent")
@@ -83,7 +88,8 @@ class PTTCrawler:
                 date = div.find("div", "date")
                 dates.append(date.text.replace("/", "").replace(" ", ""))
 
-            except:
+            except Exception as e:
+                print(e)
                 pass
 
         return links, pushs, titles, authors, dates
@@ -91,8 +97,8 @@ class PTTCrawler:
     # Crawler
     def crawl(self):
         # start = 1992 end = 2340
-        START = 1992
-        END = 2340
+        START = 2324
+        END = 2759
 
         # Restart new file
         with open('all_articles.txt', 'w', encoding='utf-8') as file:
@@ -104,8 +110,8 @@ class PTTCrawler:
             print("Processing: index"+str(i))
             links, pushs, titles, authors, dates = self.parseArticle(i)
 
-            # First page at 2017
-            if i == 1992:
+            # First page at 2017 -> 2018
+            if i == START:
                 index = dates.index("101")
                 links = links[index:]
                 pushs = pushs[index:]
@@ -113,8 +119,8 @@ class PTTCrawler:
                 authors = authors[index:]
                 dates = dates[index:]
 
-            # Last page at 2017
-            if i == 2340:
+            # Last page at 2017 -> 2018
+            if i == END:
                 index = dates.index("101")
                 links = links[:index]
                 pushs = pushs[:index]
@@ -134,7 +140,11 @@ class PTTCrawler:
     # Multiprocess subjob for Push
     def multiprocess_push(self, i, links, pushs, boos):
         print("Processing: "+str(i+1)+"/"+str(len(links)))
-        request = requests.get(links[i])
+        s = requests.session()
+        s.post(
+            'https://www.ptt.cc/ask/over18',
+            data={'from': '/bbs/Beauty/index.html', 'yes': 'yes'})
+        request = s.get(links[i])
         content = request.text
         soup = BeautifulSoup(content, "html.parser")
 
@@ -210,7 +220,6 @@ class PTTCrawler:
         boos.sort_values(by='value', ascending=False, inplace=True)
         pushs_number = pushs["value"].sum()
         boos_number = boos["value"].sum()
-
         # Write the file
         with open('push[%d-%d].txt' % (int(start_date), int(end_date)),
                   'w', encoding='utf-8') as file:
@@ -238,13 +247,18 @@ class PTTCrawler:
                 links.append(matches[-1])
         popular_number = len(links)
         print("Numbers of links: "+str(popular_number))
+        # Use session to pass [ask over 18]
+        s = requests.session()
+        s.post(
+            'https://www.ptt.cc/ask/over18',
+            data={'from': '/bbs/Beauty/index.html', 'yes': 'yes'})
         # Write the file
         with open('popular[%d-%d].txt' % (int(start_date), int(end_date)), 'w',
                   encoding='utf-8') as file:
             file.write("number of popular articles: "+str(popular_number)+"\n")
             for i in range(0, popular_number):
                 print("Processing: "+str(i+1)+"/"+str(len(links)))
-                request = requests.get(links[i])
+                request = s.get(links[i])
                 content = request.text
                 soup = BeautifulSoup(content, "html.parser")
                 # Find all <a href> in the content
@@ -271,7 +285,11 @@ class PTTCrawler:
             if (int(matches[0]) >= start_date) and \
                (int(matches[0]) <= end_date):
                 links.append(matches[-1])
-
+        # Use session to pass [ask over 18]
+        s = requests.session()
+        s.post(
+            'https://www.ptt.cc/ask/over18',
+            data={'from': '/bbs/Beauty/index.html', 'yes': 'yes'})
         # Write the file
         with open('keyword(%s)[%d-%d].txt' % (str(keywords), int(start_date),
                   int(end_date)), 'w', encoding='utf-8') as file:
@@ -279,7 +297,7 @@ class PTTCrawler:
                 print("Processing: "+str(i+1)+"/"+str(len(links)), end=" ")
                 # Set isKeywords = False
                 isKeywords = False
-                request = requests.get(links[i])
+                request = s.get(links[i])
                 content = request.text
                 soup = BeautifulSoup(content, "html.parser")
                 # Find all <div class=article-metaline> in the content
